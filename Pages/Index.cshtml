@@ -1,0 +1,34 @@
+﻿@page
+@model IndexModel
+@using Microsoft.AspNetCore.Http.Features
+
+@{
+    ViewData["Title"] = "Home page";
+    var httpConnectionFeature = this.Request.HttpContext.Features.Get<IHttpConnectionFeature>();
+    var localIpAddress = httpConnectionFeature?.LocalIpAddress;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <style>
+        table { text-align: left }
+    </style>
+
+    <table>
+        <tr>
+            <th>Request.Host</th>
+            <td>@this.Request.Host</td>
+        </tr>
+        <tr>
+            <th>RemoteIpAddress</th>
+            <td>@this.Request.HttpContext.Connection.RemoteIpAddress</td>
+        </tr>
+        <tr>
+            <th>LocalIpAddress</th>
+            <td>@localIpAddress</td>
+        </tr>
+    </table>
+
+</div>
