@@ -29,6 +29,13 @@
             <th>LocalIpAddress</th>
             <td>@localIpAddress</td>
         </tr>
+        @if (StorageService.StorageIsConfigured())
+        {
+            <tr>
+                <th>@Startup.Configuration["Blob.Path"]</th>
+                <td>@await StorageService.GetBlobContent()</td>
+            </tr>
+        }
     </table>
 
 </div>
