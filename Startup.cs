@@ -48,11 +48,24 @@ namespace HelloAspDotNetCore
                 app.UseHsts();
             }
 
+            if (!string.IsNullOrEmpty(Configuration["loader.io"]))
+            {
+                app.Map($"/{Configuration["loader.io"]}", LoaderIoToken);
+            }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
             app.UseMvc();
+        }
+
+        private static void LoaderIoToken(IApplicationBuilder app)
+        {
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync(Configuration["loader.io"]);
+            });
         }
     }
 }
