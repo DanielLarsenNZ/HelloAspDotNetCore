@@ -50,6 +50,7 @@ namespace HelloAspDotNetCore
 
             if (!string.IsNullOrEmpty(Configuration["loader.io"]))
             {
+                // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-2.2#use-run-and-map
                 app.Map($"/{Configuration["loader.io"]}", LoaderIoToken);
             }
 
