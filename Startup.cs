@@ -31,6 +31,7 @@ namespace HelloAspDotNetCore
             //    options.MinimumSameSitePolicy = SameSiteMode.None;
             //});
 
+            services.AddApplicationInsightsTelemetry();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
