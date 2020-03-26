@@ -6,6 +6,8 @@ A simple Hello World ASP.NET Core website with a couple of features for testing.
 
     docker pull daniellarsennz/helloaspdotnetcore
 
+> See also [DanielLarsenNZ/HelloFunctionsDotNetCore](https://github.com/DanielLarsenNZ/HelloFunctionsDotNetCore)
+
 ## App Settings
 
 When these two settings are present, the text content of a Blob will be displayed on the home page.
