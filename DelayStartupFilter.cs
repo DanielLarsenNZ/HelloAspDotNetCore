@@ -7,6 +7,7 @@ using System.Threading;
 
 namespace HelloAspDotNetCore
 {
+    // https://andrewlock.net/exploring-istartupfilter-in-asp-net-core/
     public class DelayStartupFilter : IStartupFilter
     {
         private readonly IConfiguration _config;

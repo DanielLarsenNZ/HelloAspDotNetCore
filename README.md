@@ -8,6 +8,11 @@ A simple Hello World ASP.NET Core website with a couple of features for testing.
 
 > See also [DanielLarsenNZ/HelloFunctionsDotNetCore](https://github.com/DanielLarsenNZ/HelloFunctionsDotNetCore)
 
+## Pages
+
+* `/` - (Index) Simple response that will return the contents of a Blob if configured in App Settings.
+* `/Cpu[?durationMs={durationMs}]` - Will use as much CPU as possible on a single thread for `durationMs`. `durationMs` is optional and defaults to 100ms. Example: `/Cpu?durationMs=250`
+
 ## App Settings
 
 * `Colour` - Sets the background colour of the Footer
