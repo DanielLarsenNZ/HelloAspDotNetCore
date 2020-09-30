@@ -29,6 +29,10 @@
             <th>LocalIpAddress</th>
             <td>@localIpAddress</td>
         </tr>
+        <tr>
+            <th>WEBSITE_INSTANCE_ID</th>
+            <td>@Environment.GetEnvironmentVariables()["WEBSITE_INSTANCE_ID"]</td>
+        </tr>
         @if (StorageService.StorageIsConfigured())
         {
             <tr>
