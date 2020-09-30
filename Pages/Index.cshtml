@@ -33,6 +33,10 @@
             <th>WEBSITE_INSTANCE_ID</th>
             <td>@Environment.GetEnvironmentVariables()["WEBSITE_INSTANCE_ID"]</td>
         </tr>
+        <tr>
+            <th>COMPUTERNAME</th>
+            <td>@Environment.GetEnvironmentVariables()["COMPUTERNAME"]</td>
+        </tr>
         @if (StorageService.StorageIsConfigured())
         {
             <tr>
