@@ -2,6 +2,7 @@
 using Microsoft.Azure.Storage.Blob;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace HelloAspDotNetCore
         {
             try
             {
+                CloudBlobClient.DefaultRequestOptions = new BlobRequestOptions { MaximumExecutionTime = TimeSpan.FromSeconds(5) };
                 // get from Blob
                 ICloudBlob blob = await CloudBlobClient.GetBlobReferenceFromServerAsync(
                     new Uri($"{CloudBlobClient.BaseUri}{Startup.Configuration["Blob.Path"]}"));
@@ -39,6 +41,13 @@ namespace HelloAspDotNetCore
                 // NOTE: This is Test code - do not do this in Production
                 return ex.Message;
             }
+        }
+
+        public static string GetStorageServerIps()
+        {
+            string hostname = CloudBlobClient.BaseUri.Host;
+            var ips = System.Net.Dns.GetHostAddresses(hostname);
+            return $"{hostname} IP = {string.Join(',', ips.Select(ip => ip.ToString()).ToArray())}";
         }
 
         private static CloudBlobClient InitializeCloudBlobClient()

@@ -41,7 +41,10 @@
         {
             <tr>
                 <th>@Startup.Configuration["Blob.Path"]</th>
-                <td>@await StorageService.GetBlobContent()</td>
+                <th>@await StorageService.GetBlobContent()</th>
+            </tr>
+            <tr>
+                <td colspan="2">@StorageService.GetStorageServerIps()</td>
             </tr>
         }
     </table>
