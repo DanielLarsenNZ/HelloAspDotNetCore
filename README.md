@@ -2,11 +2,14 @@
 
 A simple Hello World ASP.NET Core website with a couple of features for testing.
 
+![Screenshot](docs/images/home_page.jpg)
+
 [![Build Status](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_apis/build/status/DanielLarsenNZ.HelloAspDotNetCore?branchName=master)](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_build/latest?definitionId=10&branchName=master)
 
     docker pull daniellarsennz/helloaspdotnetcore
 
 > See also [DanielLarsenNZ/HelloFunctionsDotNetCore](https://github.com/DanielLarsenNZ/HelloFunctionsDotNetCore)
+
 
 ## Pages
 
