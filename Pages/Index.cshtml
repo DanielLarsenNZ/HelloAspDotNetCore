@@ -87,7 +87,7 @@
                                <th>Connected</th><td>@Model.testConnetionResult.Connected</td>
                             </tr>
                             <tr>
-                               <th>Connection time (ms)</th><td>@Model.testConnetionResult.Latency.ToString("fff")</td>
+                               <th>Connection time (ms)</th><td>@Model.testConnetionResult.Latency.Milliseconds.ToString()</td>
                             </tr>
                             <tr>
                                <th>SocketException</th><td>@Model.testConnetionResult.SocketExceptionMessage</td>

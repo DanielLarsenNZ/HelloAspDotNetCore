@@ -4,16 +4,16 @@ A simple Hello World ASP.NET Core website with a couple of features for testing.
 
 ![Screenshot](docs/images/home_page.jpg)
 
-[![Build Status](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_apis/build/status/DanielLarsenNZ.HelloAspDotNetCore?branchName=master)](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_build/latest?definitionId=10&branchName=master)
+[![Build Status](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_apis/build/status/DanielLarsenNZ.HelloAspDotNetCore?branchName=dnsdebug)](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_build/latest?definitionId=10&branchName=dnsdebug)
 
-    docker pull daniellarsennz/helloaspdotnetcore
+    docker pull daniellarsennz/helloaspdotnetcoredns
 
 > See also [DanielLarsenNZ/HelloFunctionsDotNetCore](https://github.com/DanielLarsenNZ/HelloFunctionsDotNetCore)
 
 
 ## Pages
 
-* `/` - (Index) Simple response that will return the contents of a Blob if configured in App Settings.
+* `/` - (Index) Simple response that will return the contents of a Blob if configured in App Settings. Now also adds basic dns test using two dns resolution methods one using System.Net.DNS and one using DNSClient and a basic socket testing capabiltiy. This is to support testing and troubleshooting with regional vnet integration
 * `/Cpu[?durationMs={durationMs}]` - Will use as much CPU as possible on a single thread for `durationMs`. `durationMs` is optional and defaults to 100ms. Example: `/Cpu?durationMs=250`
 
 ## App Settings

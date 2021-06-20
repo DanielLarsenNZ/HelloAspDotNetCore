@@ -22,15 +22,15 @@ namespace HelloAspDotNetCore.Pages
 
         public string error;
 
-        [BindProperty]
+        [BindProperty(SupportsGet =true)]
         public string Hostname { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet =true)]
         public string Server { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet =true)]
         public string NameServer { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet =true)]
         public bool UseSpecificNS { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet =true)]
         public int Port { get; set; }
 
         public IndexModel(IConfiguration config, ILogger<IndexModel> logger)
@@ -48,13 +48,17 @@ namespace HelloAspDotNetCore.Pages
             {
                 if (!string.IsNullOrEmpty(Hostname))
                 {
-                   
-                    
+
+                    if (UseSpecificNS)
+                    {
                         dnsResult = DNSService.GetHostAddresses(Hostname, NameServer, this._logger);
-                   
-                   
-                        netDnsResult = DNSService.GetNetDNSHostAddresses(Hostname);
-                   
+                    }
+                    else
+                    {
+                        dnsResult = DNSService.GetHostAddresses(Hostname, "", this._logger);
+                    }
+
+                    netDnsResult = DNSService.GetNetDNSHostAddresses(Hostname);
 
                 }
                 if (!String.IsNullOrEmpty(Server) && Port > 0)

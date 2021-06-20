@@ -31,7 +31,7 @@ namespace HelloAspDotNetCore
             return $"{hostname} IP = {string.Join(',', ips.AddressList.Select(ip => ip.ToString()).ToArray())} Hostname: {ips.HostName}";
         }
 
-        [Obsolete]
+
         public static string GetHostAddresses(string hostname, string nameserver = "", ILogger logger = null)
         {
             var lookup = (!string.IsNullOrEmpty(nameserver)) ? new LookupClient(IPAddress.Parse(nameserver)) : new LookupClient();
