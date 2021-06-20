@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin/Release/netcoreapp3/publish",
+    "appService.showBuildDuringDeployPrompt": false
+}

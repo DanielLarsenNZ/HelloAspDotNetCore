@@ -13,51 +13,110 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 
     <style>
-        table { text-align: left }
+        table {
+            text-align: left
+        }
     </style>
+    <form method="POST">
+        <table>
+            <tr>
+                <th>Request.Host</th>
+                <td>@this.Request.Host</td>
+            </tr>
+            <tr>
+                <th>RemoteIpAddress</th>
+                <td>@this.Request.HttpContext.Connection.RemoteIpAddress</td>
+            </tr>
+            <tr>
+                <th>LocalIpAddress</th>
+                <td>@localIpAddress</td>
+            </tr>
+            <tr>
+                <th>UtcNow</th>
+                <td>@DateTime.UtcNow</td>
+            </tr>
+            <tr>
+                <th>WEBSITE_INSTANCE_ID</th>
+                <td>@Environment.GetEnvironmentVariables()["WEBSITE_INSTANCE_ID"]</td>
+            </tr>
+            <tr>
+                <th>COMPUTERNAME</th>
+                <td>@Environment.GetEnvironmentVariables()["COMPUTERNAME"]</td>
+            </tr>
+            <tr>
+                <th>Resolved DNS Servers</th>
+                <td>@DNSService.GetDNSServerIP()</td>
+            </tr>
+            <tr>
+                <th>Lookup DNSName</th>
+                <td>
+                    <input type="text" name="Hostname" value="@this.Model.Hostname" />
+                    <button type="submit">Lookup</button>
+                    @Html.EditorFor(m => m.UseSpecificNS, new {htmlAttributes = new {@onchange =
+                    "if(this.checked){document.getElementById('nstxtbox').style.display = 'table-row'}else{document.getElementById('nstxtbox').style.display = 'none'}"}})Use Specific Name Server
+                </td>
 
-    <table>
-        <tr>
-            <th>Request.Host</th>
-            <td>@this.Request.Host</td>
-        </tr>
-        <tr>
-            <th>RemoteIpAddress</th>
-            <td>@this.Request.HttpContext.Connection.RemoteIpAddress</td>
-        </tr>
-        <tr>
-            <th>LocalIpAddress</th>
-            <td>@localIpAddress</td>
-        </tr>
-        <tr>
-            <th>UtcNow</th>
-            <td>@DateTime.UtcNow</td>
-        </tr>
-        <tr>
-            <th>WEBSITE_INSTANCE_ID</th>
-            <td>@Environment.GetEnvironmentVariables()["WEBSITE_INSTANCE_ID"]</td>
-        </tr>
-        <tr>
-            <th>COMPUTERNAME</th>
-            <td>@Environment.GetEnvironmentVariables()["COMPUTERNAME"]</td>
-        </tr>
-        @if (StorageService.StorageIsConfigured())
-        {
-            <tr>
-                <th>@Startup.Configuration["Blob.Path"]</th>
-                <th>@await StorageService.GetBlobContent()</th>
             </tr>
-            <tr>
-                <td colspan="2">@StorageService.GetStorageServerIps()</td>
-            </tr>
-        }
-        @foreach (var result in this.Model._result)
-        {
-            <tr>
-                <th>@result.Key</th>
-                <th>@Newtonsoft.Json.JsonConvert.SerializeObject(result.Value)</th>
-            </tr>
-        }
-    </table>
+            <tr id="nstxtbox"@Html.Raw((this.Model.UseSpecificNS)?"":"style='display:none'")>
+                <th>
+                    Name server:
+                </th>
+                <td> <input type="text" value="@this.Model.NameServer" name="NameServer" /></td>
 
+            </tr>
+            <tr>
+                <th>DNSClient Result</th>
+                <td> @this.Model.dnsResult</td>
+            </tr>
+            <tr>
+                <th>Sytem.Net.DNS result</th>
+                <td>@Model.netDnsResult</td>
+            </tr>
+
+            <tr>
+                <th>Test Socket</th>
+                <td>Server/IP<input type="text" name="Server" value="@this.Model.Server" />Port<input name="Port"
+                        type="text" value="@this.Model.Port" /><button
+                        type="submit">Connect</button>
+                        @if(this.Model.testConnetionResult != null){
+                        <table>
+                            <tr>
+                               <th>Remote Endpoint</th><td>@Model.testConnetionResult.RemoteEndPoint</td>
+                            </tr>
+                            <tr>
+                               <th>Connected</th><td>@Model.testConnetionResult.Connected</td>
+                            </tr>
+                            <tr>
+                               <th>Connection time (ms)</th><td>@Model.testConnetionResult.Latency.ToString("fff")</td>
+                            </tr>
+                            <tr>
+                               <th>SocketException</th><td>@Model.testConnetionResult.SocketExceptionMessage</td>
+                            </tr>
+                            
+                        </table>
+                        }
+            </tr>
+            <tr @Html.Raw(!String.IsNullOrEmpty(Model.error)?"":"style='display:none'")>
+                <th>Error</th>
+                <td style="color: red;">@this.Model.error</td>
+            </tr>
+            @if (StorageService.StorageIsConfigured())
+            {
+                <tr>
+                    <th>@Startup.Configuration["Blob.Path"]</th>
+                    <th>@await StorageService.GetBlobContent()</th>
+                </tr>
+                <tr>
+                    <td colspan="2">@StorageService.GetStorageServerIps()</td>
+                </tr>
+            }
+            @foreach (var result in this.Model._result)
+            {
+                <tr>
+                    <th>@result.Key</th>
+                    <th>@Newtonsoft.Json.JsonConvert.SerializeObject(result.Value)</th>
+                </tr>
+            }
+        </table>
+    </form>
 </div>

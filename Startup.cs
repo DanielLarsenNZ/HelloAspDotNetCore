@@ -34,7 +34,8 @@ namespace HelloAspDotNetCore
             services.AddTransient<IStartupFilter, DelayStartupFilter>();
 
             services.AddApplicationInsightsTelemetry();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,8 +61,13 @@ namespace HelloAspDotNetCore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseRouting();
 
-            app.UseMvc();
+            //app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
 
         private static void LoaderIoToken(IApplicationBuilder app)

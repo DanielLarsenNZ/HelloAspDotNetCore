@@ -16,15 +16,61 @@ namespace HelloAspDotNetCore.Pages
         private readonly IConfiguration _config;
         private readonly ILogger _logger;
         public readonly Dictionary<string, object> _result = new Dictionary<string, object>();
+        public string dnsResult;
+        public string netDnsResult;
+        public TestSocketResult testConnetionResult;
+
+        public string error;
+
+        [BindProperty]
+        public string Hostname { get; set; }
+        [BindProperty]
+        public string Server { get; set; }
+        [BindProperty]
+        public string NameServer { get; set; }
+        [BindProperty]
+        public bool UseSpecificNS { get; set; }
+        [BindProperty]
+        public int Port { get; set; }
 
         public IndexModel(IConfiguration config, ILogger<IndexModel> logger)
         {
             _config = config;
             _logger = logger;
+            Hostname = "www.microsoft.com";
+            Port = 443;
+            Server = "www.microsoft.com";
         }
+        public void OnPost()
+        {
+            error = string.Empty;
+            try
+            {
+                if (!string.IsNullOrEmpty(Hostname))
+                {
+                   
+                    
+                        dnsResult = DNSService.GetHostAddresses(Hostname, NameServer, this._logger);
+                   
+                   
+                        netDnsResult = DNSService.GetNetDNSHostAddresses(Hostname);
+                   
 
+                }
+                if (!String.IsNullOrEmpty(Server) && Port > 0)
+                {
+                    testConnetionResult = DNSService.TestConnection(Server, Port, this._logger);
+                }
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+            }
+
+        }
         public async Task OnGet()
         {
+            OnPost();
             await GetUrls();
         }
 
