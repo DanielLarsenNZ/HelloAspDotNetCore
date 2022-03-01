@@ -4,17 +4,21 @@ A simple Hello World ASP.NET Core website with a couple of features for testing.
 
 ![Screenshot](docs/images/home_page.jpg)
 
-[![Build Status](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_apis/build/status/DanielLarsenNZ.HelloAspDotNetCore?branchName=master)](https://daniellarsennz.visualstudio.com/HelloAspDotNetCore/_build/latest?definitionId=10&branchName=master)
+[![docker_push](https://github.com/DanielLarsenNZ/HelloAspDotNetCore/actions/workflows/main.yml/badge.svg)](https://github.com/DanielLarsenNZ/HelloAspDotNetCore/actions/workflows/main.yml)
 
-    docker pull daniellarsennz/helloaspdotnetcore
+> Try it out: <https://hello-aspnet.azurewebsites.net>
 
 > See also [DanielLarsenNZ/HelloFunctionsDotNetCore](https://github.com/DanielLarsenNZ/HelloFunctionsDotNetCore)
 
+## Getting started
 
-## Pages
+With [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli):
 
-* `/` - (Index) Simple response that will return the contents of a Blob if configured in App Settings.
-* `/Cpu[?durationMs={durationMs}]` - Will use as much CPU as possible on a single thread for `durationMs`. `durationMs` is optional and defaults to 100ms. Example: `/Cpu?durationMs=250`
+```
+az group create -n helloaspnet-rg -l westus2
+az appservice plan create -g helloaspnet-rg -n helloaspnet-plan --is-linux --sku FREE
+az webapp create -g helloaspnet-rg -p helloaspnet-plan -n hello-aspnet -i daniellarsennz/helloaspdotnetcore
+```
 
 ## App Settings
 
