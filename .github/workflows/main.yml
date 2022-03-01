@@ -17,6 +17,6 @@ jobs:
       - name: publish
         run: |
           echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u daniellarsennz --password-stdin
-          docker build . -t "daniellarsennz/helloaspdotnetcore:latest" -t "daniellarsennz/helloaspdotnetcore:${{ github.sha }}"
-          docker push "daniellarsennz/helloaspdotnetcore:latest"
+          docker build . -t daniellarsennz/helloaspdotnetcore:latest
+          docker push daniellarsennz/helloaspdotnetcore:latest
         shell: bash
