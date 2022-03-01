@@ -28,7 +28,7 @@ A simple Hello World ASP.NET Core website with a couple of features for testing.
 When these two settings are present, the text content of a Blob will be displayed on the home page.
 
 * `Blob.StorageConnectionString` - Storage Account Connection String
-* `Blob.Path` - Path to a Blob to display the contents of on the home page
+* `Blob.Path` - Path to a Blob in the format `container/path/to/file` to display the contents of on the home page
 
 
 

@@ -45,7 +45,7 @@
         {
             <tr>
                 <th>@Startup.Configuration["Blob.Path"]</th>
-                <th>@await StorageService.GetBlobContent()</th>
+                <td>@await StorageService.GetBlobContent()</td>
             </tr>
             <tr>
                 <td colspan="2">@StorageService.GetStorageServerIps()</td>
@@ -55,7 +55,7 @@
         {
             <tr>
                 <th>@result.Key</th>
-                <th>@Newtonsoft.Json.JsonConvert.SerializeObject(result.Value)</th>
+                <td>@Newtonsoft.Json.JsonConvert.SerializeObject(result.Value)</td>
             </tr>
         }
     </table>

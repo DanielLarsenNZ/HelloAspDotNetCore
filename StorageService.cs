@@ -1,6 +1,6 @@
-﻿using Azure.Storage;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,26 +24,28 @@ namespace HelloAspDotNetCore
         {
             try
             {
-                if (string.IsNullOrEmpty(Startup.Configuration["Blob.Path"])) throw new InvalidOperationException("App Setting Blob.Path is not set.");
+                if (string.IsNullOrEmpty(Startup.Configuration["Blob.Path"]))
+                {
+                    throw new InvalidOperationException(
+                        "App Setting Blob.Path is not set. App Setting Blob.Path must contain a container name and a file path in this format: container/path/to/file.");
+                }
 
                 var parts = Startup.Configuration["Blob.Path"].Split('/');
 
                 if (parts.Length < 2)
                 {
-                    throw new InvalidOperationException("App Setting Blob.Path is not valid. App Setting Blob.Path must contain a container name and a file path in this format: container/path/to/file");
+                    throw new InvalidOperationException(
+                        "App Setting Blob.Path is not valid. App Setting Blob.Path must contain a container name and a file path in this format: container/path/to/file");
                 }
 
-                
-
                 var container = BlobServiceClient.GetBlobContainerClient(parts[0]);
-                string filePath = string.Join('/', parts);
-                var blob = container.GetBlobClient(filePath);
-                
 
+                // filePath is the file path parts excluding the container name.
+                string filePath = string.Join('/', new List<string>(parts).Skip(1));
+                var blob = container.GetBlobClient(filePath);
 
                 //CloudBlobClient.DefaultRequestOptions = new BlobRequestOptions { MaximumExecutionTime = TimeSpan.FromSeconds(5) };
-                
-                
+
                 using (var stream = new MemoryStream())
                 {
                     await blob.DownloadToAsync(stream);
