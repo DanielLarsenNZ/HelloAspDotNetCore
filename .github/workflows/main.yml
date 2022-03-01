@@ -14,12 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: chmod
-        run: chmod +x ./publish.sh
-        shell: bash
-
       - name: publish
-        run: 
+        run: |
           echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u daniellarsennz --password-stdin
           docker build . -t "daniellarsennz/helloaspdotnetcore:latest" -t "daniellarsennz/helloaspdotnetcore:${{ github.sha }}"
           docker push "daniellarsennz/helloaspdotnetcore:latest"
