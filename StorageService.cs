@@ -1,5 +1,5 @@
-﻿using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+﻿using Azure.Storage;
+using Azure.Storage.Blobs;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,9 +10,9 @@ namespace HelloAspDotNetCore
 {
     public class StorageService
     {
-        private static readonly Lazy<CloudBlobClient> _lazyClient = new Lazy<CloudBlobClient>(InitializeCloudBlobClient);
+        private static readonly Lazy<BlobServiceClient> _lazyClient = new Lazy<BlobServiceClient>(InitializeCloudBlobClient);
 
-        private static CloudBlobClient CloudBlobClient => _lazyClient.Value;
+        private static BlobServiceClient BlobServiceClient => _lazyClient.Value;
 
         public static bool StorageIsConfigured()
         {
@@ -24,14 +24,29 @@ namespace HelloAspDotNetCore
         {
             try
             {
-                CloudBlobClient.DefaultRequestOptions = new BlobRequestOptions { MaximumExecutionTime = TimeSpan.FromSeconds(5) };
-                // get from Blob
-                ICloudBlob blob = await CloudBlobClient.GetBlobReferenceFromServerAsync(
-                    new Uri($"{CloudBlobClient.BaseUri}{Startup.Configuration["Blob.Path"]}"));
+                if (string.IsNullOrEmpty(Startup.Configuration["Blob.Path"])) throw new InvalidOperationException("App Setting Blob.Path is not set.");
 
+                var parts = Startup.Configuration["Blob.Path"].Split('/');
+
+                if (parts.Length < 2)
+                {
+                    throw new InvalidOperationException("App Setting Blob.Path is not valid. App Setting Blob.Path must contain a container name and a file path in this format: container/path/to/file");
+                }
+
+                
+
+                var container = BlobServiceClient.GetBlobContainerClient(parts[0]);
+                string filePath = string.Join('/', parts);
+                var blob = container.GetBlobClient(filePath);
+                
+
+
+                //CloudBlobClient.DefaultRequestOptions = new BlobRequestOptions { MaximumExecutionTime = TimeSpan.FromSeconds(5) };
+                
+                
                 using (var stream = new MemoryStream())
                 {
-                    await blob.DownloadToStreamAsync(stream);
+                    await blob.DownloadToAsync(stream);
                     stream.Seek(0, SeekOrigin.Begin);
                     return Encoding.UTF8.GetString(stream.ToArray());
                 }
@@ -45,18 +60,17 @@ namespace HelloAspDotNetCore
 
         public static string GetStorageServerIps()
         {
-            string hostname = CloudBlobClient.BaseUri.Host;
+            string hostname = BlobServiceClient.Uri.Host;
             var ips = System.Net.Dns.GetHostAddresses(hostname);
             return $"{hostname} IP = {string.Join(',', ips.Select(ip => ip.ToString()).ToArray())}";
         }
 
-        private static CloudBlobClient InitializeCloudBlobClient()
+        private static BlobServiceClient InitializeCloudBlobClient()
         {
             if (Startup.Configuration["Blob.StorageConnectionString"] == null)
                 throw new InvalidOperationException("App Setting \"Blob.StorageConnectionString\" is not set.");
 
-            var account = CloudStorageAccount.Parse(Startup.Configuration["Blob.StorageConnectionString"]);
-            return account.CreateCloudBlobClient();
+            return new BlobServiceClient(Startup.Configuration["Blob.StorageConnectionString"]);
         }
     }
 }
