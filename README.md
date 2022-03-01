@@ -29,6 +29,3 @@ When these two settings are present, the text content of a Blob will be displaye
 
 * `Blob.StorageConnectionString` - Storage Account Connection String
 * `Blob.Path` - Path to a Blob in the format `container/path/to/file` to display the contents of on the home page
-
-
-
