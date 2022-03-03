@@ -26,6 +26,7 @@ az webapp create -g helloaspnet-rg -p helloaspnet-plan -n hello-aspnet -i daniel
 * `loader.io` The loader.io validation key. When this setting is present the app will respond to [loader.io](https://loader.io) host validation requests.
 * `StartupDelaySeconds` - The number of seconds to delay the ASP.NET Core startup process (to simulate application startup). If this setting is missing, empty or not an integer, there will be no delay.
 * `GetUrls` - A semicolon delimited list of URL's to get. If present, the page will request these URLs and return the reponse code for each request.
+* `AzureCacheRedisConnectionString` - Connection string for a Redis server instance (does not have to be Azure Cache for Redis). When present, home page will get, increment and set a cached integer value.
 
 ### Blob settings
 

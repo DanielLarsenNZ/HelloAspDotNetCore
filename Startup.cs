@@ -1,3 +1,4 @@
+using AzureCacheRedisClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,10 +28,19 @@ namespace HelloAspDotNetCore
             //});
 
             services.AddTransient<IStartupFilter, DelayStartupFilter>();
+            
+            // Only connect to Redis if connection string is present.
+            if (string.IsNullOrWhiteSpace(Configuration["AzureCacheRedisConnectionString"]))
+            {
+                services.AddSingleton<RedisCache>();
+            }
+            else
+            {
+                services.AddSingleton((_) => new RedisCache(Configuration["AzureCacheRedisConnectionString"]));
+            }
 
             services.AddRazorPages();
             services.AddApplicationInsightsTelemetry();
-            //services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using AzureCacheRedisClient;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,17 +14,32 @@ namespace HelloAspDotNetCore.Pages
         private static readonly HttpClient _http = new HttpClient();
         private readonly IConfiguration _config;
         private readonly ILogger _logger;
+        private readonly RedisCache _redisCache;
         public readonly Dictionary<string, object> _result = new Dictionary<string, object>();
 
-        public IndexModel(IConfiguration config, ILogger<IndexModel> logger)
+        public IndexModel(IConfiguration config, ILogger<IndexModel> logger, RedisCache redisCache)
         {
             _config = config;
             _logger = logger;
+            _redisCache = redisCache;
         }
 
         public async Task OnGet()
         {
             await GetUrls();
+            await GetRedisCacheItems();
+        }
+
+        private async Task GetRedisCacheItems()
+        {
+            if (!_redisCache.IsConnected) return;
+            const string key = "index_page_count";
+            int count = await _redisCache.Get<int>(key);
+
+            _result.Add("Redis Cache GET index_page_count", count);
+
+            count++;
+            await _redisCache.Set(key, count, TimeSpan.FromDays(1));
         }
 
         private async Task GetUrls()
