@@ -1,4 +1,5 @@
 ﻿using AzureCacheRedisClient;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,12 +16,14 @@ namespace HelloAspDotNetCore.Pages
         private readonly IConfiguration _config;
         private readonly ILogger _logger;
         private readonly RedisCache _redisCache;
+        private readonly TelemetryClient _telemetryClient;
         public readonly Dictionary<string, object> _result = new Dictionary<string, object>();
 
-        public IndexModel(IConfiguration config, ILogger<IndexModel> logger, RedisCache redisCache)
+        public IndexModel(IConfiguration config, ILogger<IndexModel> logger, RedisCache redisCache, TelemetryClient telemetryClient)
         {
             _config = config;
             _logger = logger;
+            redisCache.TelemetryClient = telemetryClient;
             _redisCache = redisCache;
         }
 
