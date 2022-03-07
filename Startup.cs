@@ -27,22 +27,13 @@ namespace HelloAspDotNetCore
             //    options.CheckConsentNeeded = context => true;
             //    options.MinimumSameSitePolicy = SameSiteMode.None;
             //});
-
-            services.AddTransient<IStartupFilter, DelayStartupFilter>();
+            
             services.AddApplicationInsightsTelemetry();
 
-            // Only connect to Redis if connection string is present.
-            if (string.IsNullOrWhiteSpace(Configuration["AzureCacheRedisConnectionString"]))
-            {
-                services.AddSingleton<RedisCache>();
-            }
-            else
-            {
-                services.AddSingleton((_) => new RedisCache(Configuration["AzureCacheRedisConnectionString"]));
-            }
+            services.AddTransient<IStartupFilter, DelayStartupFilter>();
+            services.AddSingleton<RedisCache>();
 
             services.AddRazorPages();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +65,7 @@ namespace HelloAspDotNetCore
             });
             app.UseCookiePolicy();
 
+            app.UseRedisCache(Configuration["AzureCacheRedisConnectionString"]);
         }
 
         private static void LoaderIoToken(IApplicationBuilder app)

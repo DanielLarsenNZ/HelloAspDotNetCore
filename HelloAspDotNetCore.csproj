@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
 	<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-	<PackageReference Include="DanielLarsenNZ.AzureCacheRedisClient" Version="1.0.3-preview" />
+	<PackageReference Include="DanielLarsenNZ.AzureCacheRedisClient" Version="1.0.4-preview" />
   </ItemGroup>
 
 
