@@ -39,13 +39,14 @@ namespace HelloAspDotNetCore.Pages
             _result.Add("Redis Increment index_page_count", await _redisDb.Increment("index_page_count"));
 
             int operationsPerRequest = 2;
-            int.TryParse(_config["Redis:OperationsPerRequest"], out operationsPerRequest);
+
+            if (!string.IsNullOrWhiteSpace(_config["Redis:OperationsPerRequest"])) int.TryParse(_config["Redis:OperationsPerRequest"], out operationsPerRequest);
 
             int itemSizeBytes = 1024;
-            int.TryParse(_config["Redis:ItemSizeBytes"], out itemSizeBytes);
+            if (!string.IsNullOrWhiteSpace(_config["Redis:ItemSizeBytes"])) int.TryParse(_config["Redis:ItemSizeBytes"], out itemSizeBytes);
 
             int ttlSeconds = 60;
-            int.TryParse(_config["Redis:TtlSeconds"], out ttlSeconds);
+            if (!string.IsNullOrWhiteSpace(_config["Redis:TtlSeconds"])) int.TryParse(_config["Redis:TtlSeconds"], out ttlSeconds);
 
             operationsPerRequest--;     // The increment counts as one operation
             for (int i = 1; i <= operationsPerRequest; i++)
