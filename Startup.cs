@@ -31,7 +31,7 @@ namespace HelloAspDotNetCore
             services.AddApplicationInsightsTelemetry();
 
             services.AddTransient<IStartupFilter, DelayStartupFilter>();
-            services.AddSingleton<RedisCache>();
+            services.AddSingleton<RedisDb>();
 
             services.AddRazorPages();
         }
@@ -65,7 +65,7 @@ namespace HelloAspDotNetCore
             });
             app.UseCookiePolicy();
 
-            app.UseRedisCache(Configuration["AzureCacheRedisConnectionString"]);
+            app.UseRedisCache(Configuration["Redis:ConnectionString"]);
         }
 
         private static void LoaderIoToken(IApplicationBuilder app)
@@ -73,7 +73,7 @@ namespace HelloAspDotNetCore
             app.Run(async context =>
             {
                 await context.Response.WriteAsync(Configuration["loader.io"]);
-            });
+            });     
         }
     }
 }

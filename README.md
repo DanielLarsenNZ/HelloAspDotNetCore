@@ -6,7 +6,7 @@ A simple Hello World ASP.NET Core website with a couple of features for testing.
 
 [![docker_push](https://github.com/DanielLarsenNZ/HelloAspDotNetCore/actions/workflows/main.yml/badge.svg)](https://github.com/DanielLarsenNZ/HelloAspDotNetCore/actions/workflows/main.yml)
 
-> Try it out: <https://hello-aspnet.azurewebsites.net>
+> Try it out: <https://helloaspnet-eus2.azurewebsites.net>
 
 > See also [DanielLarsenNZ/HelloFunctionsDotNetCore](https://github.com/DanielLarsenNZ/HelloFunctionsDotNetCore)
 
@@ -26,7 +26,8 @@ az webapp create -g helloaspnet-rg -p helloaspnet-plan -n hello-aspnet -i daniel
 * `loader.io` The loader.io validation key. When this setting is present the app will respond to [loader.io](https://loader.io) host validation requests.
 * `StartupDelaySeconds` - The number of seconds to delay the ASP.NET Core startup process (to simulate application startup). If this setting is missing, empty or not an integer, there will be no delay.
 * `GetUrls` - A semicolon delimited list of URL's to get. If present, the page will request these URLs and return the reponse code for each request.
-* `AzureCacheRedisConnectionString` - Connection string for a Redis server instance (does not have to be Azure Cache for Redis). When present, home page will get, increment and set a cached integer value.
+
+> **Note**: Nested App Settings in JSON config have dots in their names that are not compatible with environment variables, and therefore Azure App Service App Settings. For these App Setting names, substitute the dot with two underscores, i.e. `Blob.StorageConnectionString` is equivalent to `Blob__StorageConnectionString`.
 
 ### Blob settings
 
@@ -34,3 +35,10 @@ When these two settings are present, the text content of a Blob will be displaye
 
 * `Blob.StorageConnectionString` - Storage Account Connection String
 * `Blob.Path` - Path to a Blob in the format `container/path/to/file` to display the contents of on the home page
+
+### Redis settings
+
+* `Redis.ConnectionString` - Connection string for a Redis server. When present, the web app will connect and send  operations to Redis.
+* `Redis.OperationsPerRequest` - The number of operations to execute per (page load) request. Minimum is 1 and the first operation is always a page count increment operation. Default is 2.
+* `Redis.ItemSizeBytes` - The app will generate a random string payload of this many bytes per operation (after the first increment operation). The default is 1024.
+* `Redis.TtlSeconds` - The expiry time for each key in seconds. Default is 60.

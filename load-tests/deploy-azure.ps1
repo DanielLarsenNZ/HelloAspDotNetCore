@@ -46,7 +46,7 @@ if ($Redis -eq $true) {
     $redisKey = (az redis list-keys -g $rg -n $redis | ConvertFrom-Json ).primaryKey
     
     Write-Host "az webapp config appsettings set -n $app" -ForegroundColor Yellow
-    az webapp config appsettings set -n $app -g $rg --settings "AzureCacheRedisConnectionString=$redis.redis.cache.windows.net:6380,password=$redisKey,ssl=True,abortConnect=False"
+    az webapp config appsettings set -n $app -g $rg --settings "Redis__ConnectionString=$redis.redis.cache.windows.net:6380,password=$redisKey,ssl=True,abortConnect=False"
 }
 
 if ($ApplicationInsights -eq $true) {

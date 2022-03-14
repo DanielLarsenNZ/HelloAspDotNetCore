@@ -14,14 +14,14 @@ namespace HelloAspDotNetCore.Pages
         private static readonly HttpClient _http = new HttpClient();
         private readonly IConfiguration _config;
         private readonly ILogger _logger;
-        private readonly RedisCache _redisCache;
+        private readonly RedisDb _redisDb;
         public readonly Dictionary<string, object> _result = new Dictionary<string, object>();
 
-        public IndexModel(IConfiguration config, ILogger<IndexModel> logger, RedisCache redisCache)
+        public IndexModel(IConfiguration config, ILogger<IndexModel> logger, RedisDb redisDb)
         {
             _config = config;
             _logger = logger;
-            _redisCache = redisCache;
+            _redisDb = redisDb;
         }
 
         public async Task OnGet()
@@ -32,15 +32,47 @@ namespace HelloAspDotNetCore.Pages
 
         private async Task GetRedisCacheItems()
         {
-            if (!_redisCache.IsConnected) return;
-            const string key = "index_page_count";
-            int count = await _redisCache.Get<int>(key);
+            if (!_redisDb.IsConnected) return;
+            
+            const string keyFormat = "HelloAspDotNet_CacheItem_{0}";
 
-            _result.Add("Redis Cache GET index_page_count", count);
+            _result.Add("Redis Increment index_page_count", await _redisDb.Increment("index_page_count"));
 
-            count++;
-            await _redisCache.Set(key, count, TimeSpan.FromDays(1));
+            int operationsPerRequest = 2;
+            int.TryParse(_config["Redis:OperationsPerRequest"], out operationsPerRequest);
+
+            int itemSizeBytes = 1024;
+            int.TryParse(_config["Redis:ItemSizeBytes"], out itemSizeBytes);
+
+            int ttlSeconds = 60;
+            int.TryParse(_config["Redis:TtlSeconds"], out ttlSeconds);
+
+            operationsPerRequest--;     // The increment counts as one operation
+            for (int i = 1; i <= operationsPerRequest; i++)
+            {
+                string data = await _redisDb.Get<string>(string.Format(keyFormat, i));
+
+                if (data == null)
+                {
+                    // Construct a random string of data
+                    data = string.Empty;
+                    var random = new Random();
+                    for (int j = 0; j < itemSizeBytes; j++)
+                    {
+                        data += (char)random.Next(65, 90);
+                    }
+
+                    await _redisDb.Set(string.Format(keyFormat, i), data, TimeSpan.FromSeconds(ttlSeconds));
+                    _result.Add($"Redis MISS Get, Set {string.Format(keyFormat, i)}", Truncate(data, 20));
+                }
+                else
+                {
+                    _result.Add($"Redis HIT Get {string.Format(keyFormat, i)}", Truncate(data, 20));
+                }
+            }
         }
+
+        private string Truncate(string data, int length) => $"{data[..Math.Min(length, data.Length)]}... ({data.Length} Bytes)";
 
         private async Task GetUrls()
         {
