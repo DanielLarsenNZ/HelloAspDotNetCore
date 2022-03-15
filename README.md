@@ -38,7 +38,8 @@ When these two settings are present, the text content of a Blob will be displaye
 
 ### Redis settings
 
+When `Redis.ConnectionString` is present, the app will increment a `index_page_count` key value and then get a `HelloAspDotNet_CacheItem`. If no cache item is found, a random string value will be set.
+
 * `Redis.ConnectionString` - Connection string for a Redis server. When present, the web app will connect and send  operations to Redis.
-* `Redis.OperationsPerRequest` - The number of operations to execute per (page load) request. Minimum is 1 and the first operation is always a page count increment operation. Default is 2.
-* `Redis.ItemSizeBytes` - The app will generate a random string payload of this many bytes per operation (after the first increment operation). The default is 1024.
-* `Redis.TtlSeconds` - The expiry time for each key in seconds. Default is 60.
+* `Redis.ItemSizeBytes` - The app will generate a random string payload of this many bytes to get and set. The default is 1024.
+* `Redis.TtlSeconds` - The expiry time for the item in seconds. Default is 60.

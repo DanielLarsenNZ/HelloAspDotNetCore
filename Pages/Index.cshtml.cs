@@ -34,13 +34,9 @@ namespace HelloAspDotNetCore.Pages
         {
             if (!_redisDb.IsConnected) return;
             
-            const string keyFormat = "HelloAspDotNet_CacheItem_{0}";
+            const string itemKey = "HelloAspDotNet_CacheItem";
 
             _result.Add("Redis Increment index_page_count", await _redisDb.Increment("index_page_count"));
-
-            int operationsPerRequest = 2;
-
-            if (!string.IsNullOrWhiteSpace(_config["Redis:OperationsPerRequest"])) int.TryParse(_config["Redis:OperationsPerRequest"], out operationsPerRequest);
 
             int itemSizeBytes = 1024;
             if (!string.IsNullOrWhiteSpace(_config["Redis:ItemSizeBytes"])) int.TryParse(_config["Redis:ItemSizeBytes"], out itemSizeBytes);
@@ -48,28 +44,24 @@ namespace HelloAspDotNetCore.Pages
             int ttlSeconds = 60;
             if (!string.IsNullOrWhiteSpace(_config["Redis:TtlSeconds"])) int.TryParse(_config["Redis:TtlSeconds"], out ttlSeconds);
 
-            operationsPerRequest--;     // The increment counts as one operation
-            for (int i = 1; i <= operationsPerRequest; i++)
+            string data = await _redisDb.Get<string>(itemKey);
+
+            if (data == null)
             {
-                string data = await _redisDb.Get<string>(string.Format(keyFormat, i));
-
-                if (data == null)
+                // Construct a random string of data
+                data = string.Empty;
+                var random = new Random();
+                for (int j = 0; j < itemSizeBytes; j++)
                 {
-                    // Construct a random string of data
-                    data = string.Empty;
-                    var random = new Random();
-                    for (int j = 0; j < itemSizeBytes; j++)
-                    {
-                        data += (char)random.Next(65, 90);
-                    }
+                    data += (char)random.Next(65, 90);
+                }
 
-                    await _redisDb.Set(string.Format(keyFormat, i), data, TimeSpan.FromSeconds(ttlSeconds));
-                    _result.Add($"Redis MISS Get, Set {string.Format(keyFormat, i)}", Truncate(data, 20));
-                }
-                else
-                {
-                    _result.Add($"Redis HIT Get {string.Format(keyFormat, i)}", Truncate(data, 20));
-                }
+                await _redisDb.Set(itemKey, data, TimeSpan.FromSeconds(ttlSeconds)).ConfigureAwait(true);
+                _result.Add($"Redis MISS Get, Set {itemKey}", Truncate(data, 20));
+            }
+            else
+            {
+                _result.Add($"Redis HIT Get {itemKey}", Truncate(data, 20));
             }
         }
 
