@@ -2,6 +2,10 @@ name: docker_push
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - ".github/*"
+      - "docs/*"
+      - "load-tests"
 
   workflow_dispatch:
 
