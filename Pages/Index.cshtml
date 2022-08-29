@@ -55,7 +55,7 @@
         {
             <tr>
                 <th>@result.Key</th>
-                <td>@Newtonsoft.Json.JsonConvert.SerializeObject(result.Value)</td>
+                <td>@System.Text.Json.JsonSerializer.Serialize(result.Value)</td>
             </tr>
         }
     </table>
