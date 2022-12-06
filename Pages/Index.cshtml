@@ -6,6 +6,15 @@
     ViewData["Title"] = "Home page";
     var httpConnectionFeature = this.Request.HttpContext.Features.Get<IHttpConnectionFeature>();
     var localIpAddress = httpConnectionFeature?.LocalIpAddress;
+
+    // If CacheControlMaxAgeSeconds app setting is set, and is a valid integer, set the cache-control header.
+    if (!string.IsNullOrWhiteSpace(Startup.Configuration["CacheControlMaxAgeSeconds"]))
+    {
+        if (int.TryParse(Startup.Configuration["CacheControlMaxAgeSeconds"], out int seconds) && seconds >= 0)
+        {
+            this.Response.Headers.CacheControl = $"max-age={seconds}";
+        }
+    }
 }
 
 <div class="text-center">

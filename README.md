@@ -22,12 +22,13 @@ az webapp create -g helloaspnet-rg -p helloaspnet-plan -n hello-aspnet -i daniel
 
 ## App Settings
 
+> **Note**: Nested App Settings in JSON config have dots in their names that are not compatible with environment variables, and therefore Azure App Service App Settings. For these App Setting names, substitute the dot with two underscores, i.e. `Blob.StorageConnectionString` is equivalent to `Blob__StorageConnectionString`.
+
 * `Colour` - Sets the background colour of the Footer
 * `loader.io` The loader.io validation key. When this setting is present the app will respond to [loader.io](https://loader.io) host validation requests.
 * `StartupDelaySeconds` - The number of seconds to delay the ASP.NET Core startup process (to simulate application startup). If this setting is missing, empty or not an integer, there will be no delay.
 * `GetUrls` - A semicolon delimited list of URL's to get. If present, the page will request these URLs and return the reponse code for each request.
-
-> **Note**: Nested App Settings in JSON config have dots in their names that are not compatible with environment variables, and therefore Azure App Service App Settings. For these App Setting names, substitute the dot with two underscores, i.e. `Blob.StorageConnectionString` is equivalent to `Blob__StorageConnectionString`.
+* `CacheControlMaxAgeSeconds` - When this app setting contains an integer greater or equal to zero, the home page (`/`) will include a `cache-control: max-age={CacheControlMaxAgeSeconds}` in the response.
 
 ### Blob settings
 
