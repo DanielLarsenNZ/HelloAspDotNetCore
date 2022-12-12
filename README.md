@@ -28,7 +28,7 @@ az webapp create -g helloaspnet-rg -p helloaspnet-plan -n hello-aspnet -i daniel
 * `loader.io` The loader.io validation key. When this setting is present the app will respond to [loader.io](https://loader.io) host validation requests.
 * `StartupDelaySeconds` - The number of seconds to delay the ASP.NET Core startup process (to simulate application startup). If this setting is missing, empty or not an integer, there will be no delay.
 * `GetUrls` - A semicolon delimited list of URL's to get. If present, the page will request these URLs and return the reponse code for each request.
-* `CacheControlMaxAgeSeconds` - When this app setting contains an integer greater or equal to zero, the home page (`/`) will include a `cache-control: max-age={CacheControlMaxAgeSeconds}` in the response.
+* `CacheControlHeaderValue` - When this app setting contains a value, the home page (`/`) will include the following header in the response: `cache-control: {CacheControlHeaderValue}`
 
 ### Blob settings
 

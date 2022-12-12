@@ -8,12 +8,9 @@
     var localIpAddress = httpConnectionFeature?.LocalIpAddress;
 
     // If CacheControlMaxAgeSeconds app setting is set, and is a valid integer, set the cache-control header.
-    if (!string.IsNullOrWhiteSpace(Startup.Configuration["CacheControlMaxAgeSeconds"]))
+    if (!string.IsNullOrWhiteSpace(Startup.Configuration["CacheControlHeaderValue"]))
     {
-        if (int.TryParse(Startup.Configuration["CacheControlMaxAgeSeconds"], out int seconds) && seconds >= 0)
-        {
-            this.Response.Headers.CacheControl = $"max-age={seconds}";
-        }
+        this.Response.Headers.CacheControl = Startup.Configuration["CacheControlHeaderValue"].Trim();
     }
 }
 
